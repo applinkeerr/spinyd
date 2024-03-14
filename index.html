@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spin to Decide</title>
+     <style>
+        body {
+    background-color: #e0e5ec;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form, #result {
+    background: #e0e5ec;
+    border-radius: 20px;
+    box-shadow: 10px 10px 20px #bebebe,
+               -10px -10px 20px #ffffff;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+}
+
+input[type="text"] {
+    border: none;
+    background: #e0e5ec;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    box-shadow: inset 8px 8px 15px #bebebe,
+                inset -8px -8px 15px #ffffff;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+}
+
+button {
+    border: none;
+    background: #e0e5ec;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    box-shadow: 7px 7px 14px #bebebe,
+                -7px -7px 14px #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #cbd0d8;
+}
+
+#spinner {
+    font-size: 48px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.spin {
+    animation: spin 2s linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#result {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+     </style>
+</head>
+<body>
+    <h2>Spin to Decide</h2>
+    <form id="inputForm">
+        <div id="inputFields">
+            <input type="text" name="option1" placeholder="Option 1" required>
+            <input type="text" name="option2" placeholder="Option 2" required>
+        </div>
+  <button type="button" id="addOptionBtn">Add Option</button>
+<button type="button" id="spinBtn">Spin!</button>
+<button type="button" id="resetBtn">Reset</button>
+
+
+
+    </form>
+    <div id="spinner">🌀</div>
+    <div id="result"></div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+    let inputCount = 2; // Initialize with two inputs
+
+    // Function to add a new input field
+    function addInputField() {
+        if (inputCount < 10) {
+            const inputFields = document.getElementById("inputFields");
+            inputCount++;
+            const newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.name = "option" + inputCount;
+            newInput.placeholder = "Option " + inputCount;
+            inputFields.appendChild(newInput);
+        } else {
+            alert("Maximum of 10 options allowed.");
+        }
+    }
+
+    // Function to spin and pick an option
+    function spin() {
+        const spinner = document.getElementById("spinner");
+        const inputs = document.querySelectorAll('#inputFields input[type="text"]');
+        const options = Array.from(inputs).map(input => input.value.trim()).filter(value => value !== '');
+
+        if (options.length >= 2) {
+            spinner.style.opacity = 1;
+            spinner.classList.add("spin");
+
+            setTimeout(() => {
+                const resultIndex = Math.floor(Math.random() * options.length);
+                document.getElementById("result").innerText = "Result: " + options[resultIndex];
+                spinner.style.opacity = 0;
+                spinner.classList.remove("spin");
+            }, 2000);
+        } else {
+            alert("Please enter at least 2 options.");
+        }
+    }
+
+    // Function to reset the input fields to the initial state
+    function reset() {
+        const inputFields = document.getElementById("inputFields");
+        inputFields.innerHTML = `
+            <input type="text" name="option1" placeholder="Option 1" required>
+            <input type="text" name="option2" placeholder="Option 2" required>
+        `;
+        document.getElementById("result").innerText = '';
+        inputCount = 2; // Reset the count of input fields
+    }
+
+    // Attach event listeners to the buttons
+    document.getElementById("addOptionBtn").addEventListener('click', addInputField);
+    document.getElementById("spinBtn").addEventListener('click', spin);
+    document.getElementById("resetBtn").addEventListener('click', reset);
+});
+
+    </script>
+</body>
+</html>
